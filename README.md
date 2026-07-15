@@ -90,20 +90,49 @@ python3 client_gui.py
 
 Place the following screenshots inside the `Screenshots` folder:
 
-- Login_Window_Before_Connect.png
-- Successful_Login_Online_Users.png
-- Duplicate_Login_Prevention.png
-- Invalid_Username_Login.png
-- Invalid_Username_Password_Login.png
-- Login_Lockout_After_Failed_Attempts.png
-- Unsupported_Command_Error.png
-- Authenticated_Chat_History.png
-- Session_Timeout.png
-- Wireshark_login_capture.png
-- Wireshark_Failed_login.png
-- Wireshark_Broadcast_Message.png
-- Wireshark_Logout.png
+# 📸 Screenshots
 
+## 1. Login Window Before Connect
+![Login Window Before Connect](Screenshots/Login_Window_Before_Connect.png)
+
+## 2. Successful Login with Online Users
+![Successful Login](Screenshots/Successful_Login_Online_Users.png)
+
+## 3. Duplicate Login Prevention
+![Duplicate Login Prevention](Screenshots/Duplicate_Login_Prevention.png)
+
+## 4. Invalid Username Login
+![Invalid Username Login](Screenshots/Invalid_Username_Login.png)
+
+## 5. Invalid Username or Password Login
+![Invalid Username or Password Login](Screenshots/Invalid_Username_Password_Login.png)
+
+## 6. Login Lockout After Failed Attempts
+![Login Lockout](Screenshots/Login_Lockout_After_Failed_Attempts.png)
+
+## 7. Unsupported Command Error
+![Unsupported Command Error](Screenshots/Unsupported_Command_Error.png)
+
+## 8. Authenticated Chat History
+![Authenticated Chat History](Screenshots/Authenticated_Chat_History.png)
+
+## 9. Session Timeout
+![Session Timeout](Screenshots/Session_Timeout.png)
+
+## 10. Wireshark Login Capture
+![Wireshark Login Capture](Screenshots/Wireshark_login_capture.png)
+
+## 11. Wireshark Failed Login
+![Wireshark Failed Login](Screenshots/Wireshark_Failed_login.png)
+
+## 12. Wireshark Broadcast Message
+![Wireshark Broadcast Message](Screenshots/Wireshark_Broadcast_Message.png)
+
+## 13. Wireshark Logout
+![Wireshark Logout](Screenshots/Wireshark_Logout.png)
+
+## 14. Mininet Network Setup
+![Mininet Network Setup](Screenshots/mininet_network_setup.png)
 ---
 
 # 📡 Wireshark Filter
