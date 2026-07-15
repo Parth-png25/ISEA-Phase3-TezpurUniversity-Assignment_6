@@ -88,7 +88,7 @@ python3 client_gui.py
 
 # 📸 Screenshots
 
-Place the following screenshots inside the `screenshots` folder:
+Place the following screenshots inside the `Screenshots` folder:
 
 - Login_Window_Before_Connect.png
 - Successful_Login_Online_Users.png
