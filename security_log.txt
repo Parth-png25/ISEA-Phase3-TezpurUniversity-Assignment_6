@@ -1,0 +1,66 @@
+2026-07-15 19:14:15 | AUTH_SUCCESS | user=admin | ip=10.0.0.2 | detail=Login successful
+2026-07-15 19:14:15 | SESSION_START | user=admin | ip=10.0.0.2 | detail=Session opened
+2026-07-15 19:37:25 | AUTH_SUCCESS | user=admin | ip=10.0.0.2 | detail=Login successful
+2026-07-15 19:37:25 | SESSION_START | user=admin | ip=10.0.0.2 | detail=Session opened
+2026-07-15 19:37:52 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
+2026-07-15 19:37:52 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
+2026-07-15 19:38:12 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
+2026-07-15 19:38:12 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
+2026-07-15 19:48:41 | AUTH_SUCCESS | user=admin | ip=10.0.0.2 | detail=Login successful
+2026-07-15 19:48:41 | SESSION_START | user=admin | ip=10.0.0.2 | detail=Session opened
+2026-07-15 19:49:01 | AUTH_SUCCESS | user=alice | ip=10.0.0.4 | detail=Login successful
+2026-07-15 19:49:01 | SESSION_START | user=alice | ip=10.0.0.4 | detail=Session opened
+2026-07-15 19:51:22 | AUTH_SUCCESS | user=admin | ip=10.0.0.4 | detail=Login successful
+2026-07-15 19:51:22 | SESSION_START | user=admin | ip=10.0.0.4 | detail=Session opened
+2026-07-15 19:51:40 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
+2026-07-15 19:51:40 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
+2026-07-15 20:16:14 | AUTH_SUCCESS | user=admin | ip=10.0.0.2 | detail=Login successful
+2026-07-15 20:16:14 | SESSION_START | user=admin | ip=10.0.0.2 | detail=Session opened
+2026-07-15 20:16:44 | AUTH_SUCCESS | user=alice | ip=10.0.0.4 | detail=Login successful
+2026-07-15 20:16:44 | SESSION_START | user=alice | ip=10.0.0.4 | detail=Session opened
+2026-07-15 20:18:20 | LOGOUT | user=alice | ip=10.0.0.4 | detail=User logged out
+2026-07-15 20:18:22 | LOGOUT | user=admin | ip=10.0.0.2 | detail=User logged out
+2026-07-15 20:23:14 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-15 20:23:14 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-15 20:24:28 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password
+2026-07-15 20:24:35 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password
+2026-07-15 20:24:48 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password
+2026-07-15 20:24:50 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password
+2026-07-15 20:24:52 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password; account locked for 60 seconds
+2026-07-15 20:26:07 | AUTH_FAIL | user=bob | ip=10.0.0.4 | detail=Incorrect password
+2026-07-15 20:26:14 | SESSION_TIMEOUT | user=sara | ip=10.0.0.2 | detail=Inactivity timeout
+2026-07-15 20:26:20 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
+2026-07-15 20:26:20 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
+2026-07-15 20:28:20 | DUPLICATE_LOGIN | user=bob | ip=10.0.0.2 | detail=User already logged in
+2026-07-15 20:28:57 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-15 20:28:57 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-15 20:29:21 | SESSION_TIMEOUT | user=bob | ip=10.0.0.4 | detail=Inactivity timeout
+2026-07-15 20:29:57 | AUTH_SUCCESS | user=bob | ip=10.0.0.3 | detail=Login successful
+2026-07-15 20:29:57 | SESSION_START | user=bob | ip=10.0.0.3 | detail=Session opened
+2026-07-15 20:30:52 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
+2026-07-15 20:30:55 | LOGOUT | user=bob | ip=10.0.0.3 | detail=User logged out
+2026-07-15 20:31:43 | AUTH_SUCCESS | user=alice | ip=10.0.0.2 | detail=Login successful
+2026-07-15 20:31:43 | SESSION_START | user=alice | ip=10.0.0.2 | detail=Session opened
+2026-07-15 20:32:01 | AUTH_SUCCESS | user=bob | ip=10.0.0.3 | detail=Login successful
+2026-07-15 20:32:01 | SESSION_START | user=bob | ip=10.0.0.3 | detail=Session opened
+2026-07-15 20:32:22 | AUTH_SUCCESS | user=sara | ip=10.0.0.4 | detail=Login successful
+2026-07-15 20:32:22 | SESSION_START | user=sara | ip=10.0.0.4 | detail=Session opened
+2026-07-15 20:34:09 | LOGOUT | user=sara | ip=10.0.0.4 | detail=User logged out
+2026-07-15 20:34:50 | AUTH_FAIL | user=mohit | ip=10.0.0.2 | detail=Unknown username
+2026-07-15 20:36:11 | SESSION_TIMEOUT | user=bob | ip=10.0.0.3 | detail=Inactivity timeout
+2026-07-15 20:38:08 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-15 20:38:08 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-15 20:39:23 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
+2026-07-15 20:44:15 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-15 20:44:15 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-15 20:45:00 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
+2026-07-15 20:45:39 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-15 20:45:39 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-15 20:46:27 | AUTH_FAIL | user=bob | ip=10.0.0.3 | detail=Incorrect password
+2026-07-15 20:47:39 | AUTH_SUCCESS | user=bob | ip=10.0.0.3 | detail=Login successful
+2026-07-15 20:47:39 | SESSION_START | user=bob | ip=10.0.0.3 | detail=Session opened
+2026-07-15 20:47:59 | AUTH_SUCCESS | user=alice | ip=10.0.0.4 | detail=Login successful
+2026-07-15 20:47:59 | SESSION_START | user=alice | ip=10.0.0.4 | detail=Session opened
+2026-07-15 20:48:39 | SESSION_TIMEOUT | user=sara | ip=10.0.0.2 | detail=Inactivity timeout
+2026-07-15 20:51:11 | SESSION_TIMEOUT | user=alice | ip=10.0.0.4 | detail=Inactivity timeout
+2026-07-15 20:51:31 | SESSION_TIMEOUT | user=bob | ip=10.0.0.3 | detail=Inactivity timeout

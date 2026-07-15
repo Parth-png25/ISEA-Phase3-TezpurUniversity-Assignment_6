@@ -1,0 +1,6 @@
+timestamp,sender,receiver,message_type,message
+2026-07-15 20:32:39,alice,ALL,BROADCAST,hii everyone
+2026-07-15 20:32:51,bob,ALL,BROADCAST,hello
+2026-07-15 20:33:10,bob,alice,PRIVATE,hey cutie
+2026-07-15 20:48:11,alice,ALL,BROADCAST,heyy guys
+2026-07-15 20:48:31,bob,ALL,BROADCAST,heya!
