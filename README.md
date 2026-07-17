@@ -88,10 +88,6 @@ python3 client_gui.py
 
 # 📸 Screenshots
 
-Place the following screenshots inside the `Screenshots` folder:
-
-# 📸 Screenshots
-
 ## 1. Login Window Before Connect
 ![Login Window Before Connect](Screenshots/Login_Window_Before_Connect.png)
 
@@ -178,4 +174,3 @@ The application successfully integrates authentication, SHA-256 password hashing
 
 ---
 
-⭐ Developed for Assignment 7.
