@@ -150,29 +150,58 @@ python3 client_gui.py
 -   CPU Usage
 -   Memory Usage
 
-### Generated Graphs
+## 📊 Performance Graphs
 
--   Average Delay vs Concurrent Clients
--   Throughput vs Concurrent Clients
--   CPU Usage vs Concurrent Clients
--   Memory Usage vs Concurrent Clients
+### Average Delay vs Concurrent Clients
+![Average Delay](Graphs/average_delay_ms.png)
 
+### Throughput vs Concurrent Clients
+![Throughput](Graphs/throughput_msg_per_sec.png)
+
+### CPU Usage vs Concurrent Clients
+![CPU Usage](Graphs/cpu_usage_percent.png)
+
+### Memory Usage vs Concurrent Clients
+![Memory Usage](Graphs/memory_usage_mb.png)
 ------------------------------------------------------------------------
 
 ## 📸 Screenshots
 
--   Successful Login
--   Authenticated Chat
--   Duplicate Login Blocked
--   Wrong Password
--   Password Too Short
--   Account Lockout
--   Session Timeout
--   Logout
--   Wireshark Login
--   Wireshark Chat
--   Wireshark Failed Login
--   Wireshark Logout
+### Successful Login
+![Successful Login](Screenshots/Successful_login.png)
+
+### Authenticated Chat
+![Authenticated Chat](Screenshots/Authenticated_chat.png)
+
+### Duplicate Login Blocked
+![Duplicate Login](Screenshots/Duplicate_login_blocked.png)
+
+### Wrong Password
+![Wrong Password](Screenshots/Wrong_password_username.png)
+
+### Password Too Short
+![Password Too Short](Screenshots/Password_too_short.png)
+
+### Account Lockout
+![Account Lockout](Screenshots/Too_many_failed_attempts.png)
+
+### Session Timeout
+![Session Timeout](Screenshots/Session_timeout.png)
+
+### Logout
+![Logout](Screenshots/Logged_out_disconnect.png)
+
+### Wireshark Login Success
+![Wireshark Login](Screenshots/Wireshark_login_successful.png)
+
+### Wireshark Authenticated Chat
+![Wireshark Chat](Screenshots/Wireshark_Authenticated_chat.png)
+
+### Wireshark Failed Login
+![Wireshark Failed Login](Screenshots/Wireshark_failed_login_traffic.png)
+
+### Wireshark Logout
+![Wireshark Logout](Screenshots/Wireshark_logout_timeout_traffic.png)
 
 ------------------------------------------------------------------------
 
