@@ -186,7 +186,7 @@ python3 client_gui.py
 ![Account Lockout](Screenshots/Too_many_failed_attempts.png)
 
 ### Session Timeout
-![Session Timeout](Screenshots/Session_timeout.png)
+![Session Timeout](Screenshots/Session_Timeout.png)
 
 ### Logout
 ![Logout](Screenshots/Logged_out_disconnect.png)
