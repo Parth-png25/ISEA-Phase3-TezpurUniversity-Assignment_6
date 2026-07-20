@@ -7,27 +7,41 @@ import socket
 import threading
 import time
 from datetime import datetime
+from pathlib import Path
 
-HOST = "0.0.0.0"
-PORT = 5000
+try:
+    import psutil
+except Exception:
+    psutil = None
 
-USERS_FILE = "users.json"
-CHAT_HISTORY = "chat_history.csv"
-SECURITY_LOG = "security_log.txt"
-
-MAX_MESSAGE_LEN = 500
-USERNAME_MIN_LEN = 3
-USERNAME_MAX_LEN = 20
-PASSWORD_MIN_LEN = 6
-PASSWORD_MAX_LEN = 64
-SESSION_TIMEOUT = 180  # seconds
-LOCKOUT_DURATION = 60  # seconds
-MAX_FAILED_ATTEMPTS = 5
+DEFAULT_CONFIG = {
+    "bind_host": "0.0.0.0",
+    "server_port": 5000,
+    "max_message_len": 500,
+    "username_min_len": 3,
+    "username_max_len": 20,
+    "password_min_len": 6,
+    "password_max_len": 64,
+    "session_timeout": 180,
+    "lockout_duration": 60,
+    "max_failed_attempts": 5,
+    "max_clients": 10,
+    "accept_timeout": 1.0,
+    "cleanup_interval": 5.0,
+    "users_file": "users.json",
+    "chat_history_file": "chat_history.csv",
+    "security_log_file": "security_log.txt",
+    "performance_results_file": "performance_results.csv",
+    "performance_logging": True,
+}
 
 USERNAME_PATTERN = re.compile(r"^[A-Za-z0-9_]{3,20}$")
 
+config = dict(DEFAULT_CONFIG)
+
 clients = {}  # socket -> client info
 clients_lock = threading.Lock()
+socket_send_locks = {}  # socket -> threading.Lock
 
 active_users = set()
 active_users_lock = threading.Lock()
@@ -44,6 +58,14 @@ stats = {
 }
 stats_lock = threading.Lock()
 
+shutdown_event = threading.Event()
+
+performance_lock = threading.Lock()
+performance_state = {
+    "start_time": time.time(),
+    "delay_samples": 0,
+    "delay_total_ms": 0.0,
+}
 
 def now_str() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -53,29 +75,80 @@ def sha256_hash(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def ensure_files() -> None:
-    if not os.path.exists(USERS_FILE):
-        default_users = {
-            # Demo accounts for testing assignment 7
-            "admin": sha256_hash("Admin@123"),
-            "alice": sha256_hash("Alice@123"),
-            "bob": sha256_hash("Bob@123"),
-        }
-        with open(USERS_FILE, "w", encoding="utf-8") as f:
-            json.dump(default_users, f, indent=2)
+def load_config() -> dict:
+    cfg_path = Path("config.json")
+    loaded = {}
+    if cfg_path.exists():
+        try:
+            with cfg_path.open("r", encoding="utf-8") as f:
+                loaded = json.load(f)
+            if not isinstance(loaded, dict):
+                loaded = {}
+        except Exception:
+            loaded = {}
+    merged = dict(DEFAULT_CONFIG)
+    merged.update(loaded)
+    return merged
 
-    if not os.path.exists(CHAT_HISTORY):
-        with open(CHAT_HISTORY, "w", newline="", encoding="utf-8") as f:
+
+def ensure_files() -> None:
+    users_file = Path(config["users_file"])
+    if not users_file.exists():
+        fallback = Path("users(2).json")
+        if fallback.exists():
+            try:
+                shutil_copy = fallback.read_text(encoding="utf-8")
+                users_file.write_text(shutil_copy, encoding="utf-8")
+            except Exception:
+                default_users = {
+                    "admin": sha256_hash("Admin@123"),
+                    "alice": sha256_hash("Alice@123"),
+                    "bob": sha256_hash("Bob@123"),
+                }
+                with users_file.open("w", encoding="utf-8") as f:
+                    json.dump(default_users, f, indent=2)
+        else:
+            default_users = {
+                "admin": sha256_hash("Admin@123"),
+                "alice": sha256_hash("Alice@123"),
+                "bob": sha256_hash("Bob@123"),
+            }
+            with users_file.open("w", encoding="utf-8") as f:
+                json.dump(default_users, f, indent=2)
+
+    history_file = Path(config["chat_history_file"])
+    if not history_file.exists():
+        with history_file.open("w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(["timestamp", "sender", "receiver", "message_type", "message"])
 
-    if not os.path.exists(SECURITY_LOG):
-        with open(SECURITY_LOG, "w", encoding="utf-8") as f:
-            f.write("")
+    security_file = Path(config["security_log_file"])
+    if not security_file.exists():
+        security_file.write_text("", encoding="utf-8")
+
+    performance_file = Path(config["performance_results_file"])
+    if not performance_file.exists():
+        with performance_file.open("w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                "timestamp",
+                "event",
+                "username",
+                "active_clients",
+                "messages_processed",
+                "broadcast_messages",
+                "private_messages",
+                "average_delay_ms",
+                "throughput_msg_per_sec",
+                "cpu_usage_percent",
+                "memory_usage_mb",
+                "note",
+            ])
 
 
 def load_users() -> dict:
-    with open(USERS_FILE, "r", encoding="utf-8") as f:
+    users_file = Path(config["users_file"])
+    with users_file.open("r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, dict):
         raise ValueError("users.json must contain a JSON object of username -> password_hash")
@@ -84,14 +157,64 @@ def load_users() -> dict:
 
 def log_security(event: str, username: str = "-", ip: str = "-", detail: str = "-") -> None:
     line = f"{now_str()} | {event} | user={username} | ip={ip} | detail={detail}\n"
-    with open(SECURITY_LOG, "a", encoding="utf-8") as f:
+    with Path(config["security_log_file"]).open("a", encoding="utf-8") as f:
         f.write(line)
 
 
 def log_chat(sender: str, receiver: str, message_type: str, message: str) -> None:
-    with open(CHAT_HISTORY, "a", newline="", encoding="utf-8") as f:
+    with Path(config["chat_history_file"]).open("a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow([now_str(), sender, receiver, message_type, message])
+
+
+def _get_process_metrics() -> tuple[float, float]:
+    if psutil is None:
+        return 0.0, 0.0
+    try:
+        proc = psutil.Process(os.getpid())
+        cpu = proc.cpu_percent(None)
+        mem_mb = proc.memory_info().rss / (1024 * 1024)
+        return round(float(cpu), 2), round(float(mem_mb), 2)
+    except Exception:
+        return 0.0, 0.0
+
+
+def log_performance(event: str, username: str = "-", delay_ms: float | None = None, note: str = "-") -> None:
+    if not config.get("performance_logging", True):
+        return
+
+    with performance_lock:
+        if delay_ms is not None:
+            performance_state["delay_samples"] += 1
+            performance_state["delay_total_ms"] += max(0.0, float(delay_ms))
+
+        avg_delay = 0.0
+        if performance_state["delay_samples"]:
+            avg_delay = performance_state["delay_total_ms"] / performance_state["delay_samples"]
+
+        uptime = max(time.time() - performance_state["start_time"], 0.001)
+        throughput = stats["messages_processed"] / uptime
+
+        cpu_usage, memory_usage = _get_process_metrics()
+
+        row = [
+            now_str(),
+            event,
+            username,
+            len(clients),
+            stats["messages_processed"],
+            stats["broadcast_messages"],
+            stats["private_messages"],
+            f"{avg_delay:.2f}",
+            f"{throughput:.2f}",
+            f"{cpu_usage:.2f}",
+            f"{memory_usage:.2f}",
+            note,
+        ]
+
+        with Path(config["performance_results_file"]).open("a", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(row)
 
 
 def update_stats(kind: str) -> None:
@@ -114,16 +237,16 @@ def validate_username(username: str) -> tuple[bool, str]:
 def validate_password(password: str) -> tuple[bool, str]:
     if not password:
         return False, "Password cannot be empty."
-    if not (PASSWORD_MIN_LEN <= len(password) <= PASSWORD_MAX_LEN):
-        return False, f"Password must be between {PASSWORD_MIN_LEN} and {PASSWORD_MAX_LEN} characters."
+    if not (config["password_min_len"] <= len(password) <= config["password_max_len"]):
+        return False, f"Password must be between {config['password_min_len']} and {config['password_max_len']} characters."
     return True, ""
 
 
 def validate_message(message: str) -> tuple[bool, str]:
     if not message:
         return False, "Message cannot be empty."
-    if len(message) > MAX_MESSAGE_LEN:
-        return False, f"Message too long. Maximum allowed is {MAX_MESSAGE_LEN} characters."
+    if len(message) > config["max_message_len"]:
+        return False, f"Message too long. Maximum allowed is {config['max_message_len']} characters."
     return True, ""
 
 
@@ -149,8 +272,8 @@ def register_failed_login(username: str) -> int:
         count = int(data.get("count", 0)) + 1
         locked_until = int(data.get("locked_until", 0))
 
-        if count >= MAX_FAILED_ATTEMPTS:
-            locked_until = int(time.time()) + LOCKOUT_DURATION
+        if count >= config["max_failed_attempts"]:
+            locked_until = int(time.time()) + config["lockout_duration"]
             count = 0
 
         failed_attempts[username] = {"count": count, "locked_until": locked_until}
@@ -162,13 +285,21 @@ def register_failed_login(username: str) -> int:
 
 def reset_failed_login(username: str) -> None:
     with failed_attempts_lock:
-        if username in failed_attempts:
-            failed_attempts.pop(username, None)
+        failed_attempts.pop(username, None)
+
+
+def get_client_send_lock(sock: socket.socket) -> threading.Lock | None:
+    return socket_send_locks.get(sock)
 
 
 def send_line(sock: socket.socket, message: str) -> bool:
     try:
-        sock.sendall((message + "\n").encode("utf-8"))
+        lock = get_client_send_lock(sock)
+        if lock is None:
+            sock.sendall((message + "\n").encode("utf-8"))
+        else:
+            with lock:
+                sock.sendall((message + "\n").encode("utf-8"))
         return True
     except Exception:
         return False
@@ -176,40 +307,44 @@ def send_line(sock: socket.socket, message: str) -> bool:
 
 def broadcast(message: str, exclude_sock: socket.socket | None = None) -> None:
     with clients_lock:
-        dead = []
-        for sock in list(clients.keys()):
-            if exclude_sock is not None and sock == exclude_sock:
-                continue
-            try:
-                sock.sendall((message + "\n").encode("utf-8"))
-            except Exception:
-                dead.append(sock)
+        targets = list(clients.keys())
 
-        for sock in dead:
-            remove_client_socket(sock)
+    dead = []
+    for sock in targets:
+        if exclude_sock is not None and sock == exclude_sock:
+            continue
+        if not send_line(sock, message):
+            dead.append(sock)
+
+    for sock in dead:
+        remove_client_socket(sock)
 
 
 def send_user_list() -> None:
     with clients_lock:
         usernames = [info["username"] for info in clients.values()]
-        payload = "USERLIST|" + ",".join(usernames)
+        targets = list(clients.keys())
 
-        dead = []
-        for sock in list(clients.keys()):
-            try:
-                sock.sendall((payload + "\n").encode("utf-8"))
-            except Exception:
-                dead.append(sock)
+    payload = "USERLIST|" + ",".join(usernames)
+    dead = []
+    for sock in targets:
+        if not send_line(sock, payload):
+            dead.append(sock)
 
-        for sock in dead:
-            remove_client_socket(sock)
+    for sock in dead:
+        remove_client_socket(sock)
 
 
-def remove_client_socket(sock: socket.socket) -> None:
+def remove_client_socket(sock: socket.socket, reason: str = "Client disconnected") -> None:
     with clients_lock:
         info = clients.pop(sock, None)
+        socket_send_locks.pop(sock, None)
 
     if not info:
+        try:
+            sock.close()
+        except Exception:
+            pass
         return
 
     username = info["username"]
@@ -217,21 +352,26 @@ def remove_client_socket(sock: socket.socket) -> None:
         active_users.discard(username)
 
     try:
+        sock.shutdown(socket.SHUT_RDWR)
+    except Exception:
+        pass
+    try:
         sock.close()
     except Exception:
         pass
 
-    log_security("DISCONNECT", username=username, ip=info.get("ip", "-"), detail="Client disconnected")
+    log_security("DISCONNECT", username=username, ip=info.get("ip", "-"), detail=reason)
     broadcast(f"[SERVER] {username} left the chat.", exclude_sock=sock)
     send_user_list()
 
 
 def get_last_five_messages(username: str) -> list[str]:
-    if not os.path.exists(CHAT_HISTORY):
+    history_file = Path(config["chat_history_file"])
+    if not history_file.exists():
         return []
 
     rows = []
-    with open(CHAT_HISTORY, "r", encoding="utf-8") as f:
+    with history_file.open("r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             sender = row.get("sender", "")
@@ -240,7 +380,6 @@ def get_last_five_messages(username: str) -> list[str]:
             message = row.get("message", "")
             timestamp = row.get("timestamp", "")
 
-            # Show messages sent by or addressed to the user
             if sender == username or receiver == username or receiver == "ALL":
                 if msg_type == "PRIVATE":
                     rows.append(f"[{timestamp}] [PRIVATE] {sender} -> {receiver}: {message}")
@@ -252,6 +391,7 @@ def get_last_five_messages(username: str) -> list[str]:
 
 def authenticate_user(client_socket: socket.socket, address: tuple[str, int], users: dict) -> tuple[str | None, str]:
     ip, _ = address
+    auth_start = time.perf_counter()
 
     if not send_line(client_socket, "AUTH_REQUIRED|Send credentials as username|password"):
         return None, "Socket closed before auth"
@@ -260,14 +400,12 @@ def authenticate_user(client_socket: socket.socket, address: tuple[str, int], us
         client_socket.settimeout(60)
         raw = client_socket.recv(2048)
         if not raw:
+            log_performance("AUTH_FAIL", username="-", delay_ms=(time.perf_counter() - auth_start) * 1000, note="No credentials received")
             return None, "No credentials received"
 
-        try:
-            payload = raw.decode("utf-8", errors="ignore").strip()
-        except Exception:
-            return None, "Invalid encoding"
-
+        payload = raw.decode("utf-8", errors="ignore").strip()
         if "|" not in payload:
+            log_performance("AUTH_FAIL", username="-", delay_ms=(time.perf_counter() - auth_start) * 1000, note="Malformed authentication packet")
             return None, "Malformed authentication packet"
 
         username, password = payload.split("|", 1)
@@ -277,20 +415,26 @@ def authenticate_user(client_socket: socket.socket, address: tuple[str, int], us
         valid_user, user_msg = validate_username(username)
         if not valid_user:
             log_security("AUTH_FAIL", username=username or "-", ip=ip, detail=user_msg)
-            update_stats("FAILED")
+            with stats_lock:
+                stats["failed_logins"] += 1
+            log_performance("AUTH_FAIL", username=username or "-", delay_ms=(time.perf_counter() - auth_start) * 1000, note=user_msg)
             return None, user_msg
 
         valid_pass, pass_msg = validate_password(password)
         if not valid_pass:
             log_security("AUTH_FAIL", username=username, ip=ip, detail=pass_msg)
-            update_stats("FAILED")
+            with stats_lock:
+                stats["failed_logins"] += 1
+            log_performance("AUTH_FAIL", username=username, delay_ms=(time.perf_counter() - auth_start) * 1000, note=pass_msg)
             return None, pass_msg
 
         locked, remaining = is_locked(username)
         if locked:
             msg = f"Account locked. Try again after {remaining} seconds."
             log_security("AUTH_LOCKED", username=username, ip=ip, detail=msg)
-            update_stats("FAILED")
+            with stats_lock:
+                stats["failed_logins"] += 1
+            log_performance("AUTH_LOCKED", username=username, delay_ms=(time.perf_counter() - auth_start) * 1000, note=msg)
             return None, msg
 
         expected_hash = users.get(username)
@@ -300,7 +444,9 @@ def authenticate_user(client_socket: socket.socket, address: tuple[str, int], us
             if lock_seconds:
                 detail += f"; account locked for {lock_seconds} seconds"
             log_security("AUTH_FAIL", username=username, ip=ip, detail=detail)
-            update_stats("FAILED")
+            with stats_lock:
+                stats["failed_logins"] += 1
+            log_performance("AUTH_FAIL", username=username, delay_ms=(time.perf_counter() - auth_start) * 1000, note="Invalid username or password")
             return None, "Invalid username or password."
 
         if sha256_hash(password) != expected_hash:
@@ -309,16 +455,18 @@ def authenticate_user(client_socket: socket.socket, address: tuple[str, int], us
             if lock_seconds:
                 detail += f"; account locked for {lock_seconds} seconds"
             log_security("AUTH_FAIL", username=username, ip=ip, detail=detail)
-            update_stats("FAILED")
+            with stats_lock:
+                stats["failed_logins"] += 1
             if lock_seconds:
+                log_performance("AUTH_FAIL", username=username, delay_ms=(time.perf_counter() - auth_start) * 1000, note=f"Account locked for {lock_seconds} seconds")
                 return None, f"Too many failed attempts. Account locked for {lock_seconds} seconds."
             return None, "Invalid username or password."
 
         with active_users_lock:
             if username in active_users:
                 log_security("DUPLICATE_LOGIN", username=username, ip=ip, detail="User already logged in")
+                log_performance("DUPLICATE_LOGIN", username=username, delay_ms=(time.perf_counter() - auth_start) * 1000, note="Duplicate login")
                 return None, "This user is already logged in from another session."
-
             active_users.add(username)
 
         reset_failed_login(username)
@@ -327,6 +475,7 @@ def authenticate_user(client_socket: socket.socket, address: tuple[str, int], us
             stats["logins"] += 1
 
         with clients_lock:
+            socket_send_locks[client_socket] = threading.Lock()
             clients[client_socket] = {
                 "username": username,
                 "ip": ip,
@@ -336,8 +485,8 @@ def authenticate_user(client_socket: socket.socket, address: tuple[str, int], us
                 "last_activity": time.time(),
             }
 
+        log_performance("AUTH_SUCCESS", username=username, delay_ms=(time.perf_counter() - auth_start) * 1000, note="Login successful")
         return username, "AUTH_OK|Login successful"
-
     finally:
         client_socket.settimeout(None)
 
@@ -347,15 +496,20 @@ def handle_client(client_socket: socket.socket, address: tuple[str, int], users:
     username = None
 
     try:
-        username, auth_reply = authenticate_user(client_socket, address, users)  
-        print(f"[LOGIN] {username} authenticated")
+        if len(clients) >= config["max_clients"]:
+            send_line(client_socket, "AUTH_FAIL|Server is busy. Please try again later.")
+            log_security("REJECTED", username="-", ip=ip, detail="Maximum client limit reached")
+            log_performance("SERVER_BUSY", username="-", delay_ms=0.0, note="Maximum client limit reached")
+            return
+
+        username, auth_reply = authenticate_user(client_socket, address, users)
+        print(f"[LOGIN] {username} authenticated from {ip}:{port}")
         if not username:
             send_line(client_socket, f"AUTH_FAIL|{auth_reply}")
             return
 
         send_line(client_socket, auth_reply)
         send_user_list()
-        print("[CLIENTS]", clients)
 
         history = get_last_five_messages(username)
         if history:
@@ -367,9 +521,9 @@ def handle_client(client_socket: socket.socket, address: tuple[str, int], users:
         broadcast(f"[SERVER] {username} joined the chat.", exclude_sock=client_socket)
         log_security("SESSION_START", username=username, ip=ip, detail="Session opened")
 
-        client_socket.settimeout(5.0)
+        client_socket.settimeout(1.0)
 
-        while True:
+        while not shutdown_event.is_set():
             try:
                 raw = client_socket.recv(4096)
                 if not raw:
@@ -379,21 +533,25 @@ def handle_client(client_socket: socket.socket, address: tuple[str, int], users:
                 if not message:
                     continue
 
+                event_start = time.perf_counter()
+
                 with clients_lock:
                     if client_socket in clients:
                         clients[client_socket]["last_activity"] = time.time()
 
-                if len(message) > MAX_MESSAGE_LEN and not message.startswith("/"):
-                    send_line(client_socket, f"[ERROR] Message too long. Max {MAX_MESSAGE_LEN} characters.")
+                if len(message) > config["max_message_len"] and not message.startswith("/"):
+                    send_line(client_socket, f"[ERROR] Message too long. Max {config['max_message_len']} characters.")
                     continue
 
                 if message == "/logout":
                     send_line(client_socket, "SERVER|Logged out successfully.")
                     log_security("LOGOUT", username=username, ip=ip, detail="User logged out")
+                    log_performance("LOGOUT", username=username, delay_ms=(time.perf_counter() - event_start) * 1000, note="User logged out")
                     break
 
                 if message == "/list":
                     send_user_list()
+                    log_performance("LIST", username=username, delay_ms=(time.perf_counter() - event_start) * 1000, note="User list refreshed")
                     continue
 
                 if message.startswith("/msg "):
@@ -407,35 +565,41 @@ def handle_client(client_socket: socket.socket, address: tuple[str, int], users:
                         send_line(client_socket, "[ERROR] Usage: /msg username message")
                         continue
 
-                    if len(private_message) > MAX_MESSAGE_LEN:
-                        send_line(client_socket, f"[ERROR] Message too long. Max {MAX_MESSAGE_LEN} characters.")
+                    if len(private_message) > config["max_message_len"]:
+                        send_line(client_socket, f"[ERROR] Message too long. Max {config['max_message_len']} characters.")
                         continue
 
-                    delivered = False
                     target_sock = None
                     with clients_lock:
                         for sock, info in clients.items():
                             if info["username"] == target:
                                 target_sock = sock
-                                delivered = True
                                 break
 
-                    if delivered and target_sock:
-                        send_line(target_sock, f"[PRIVATE] {username}: {private_message}")
-                        send_line(client_socket, f"[PRIVATE to {target}] {private_message}")
-                        log_chat(username, target, "PRIVATE", private_message)
-                        update_stats("PRIVATE")
+                    if target_sock:
+                        if send_line(target_sock, f"[PRIVATE] {username}: {private_message}"):
+                            send_line(client_socket, f"[PRIVATE to {target}] {private_message}")
+                            log_chat(username, target, "PRIVATE", private_message)
+                            update_stats("PRIVATE")
+                            log_performance("PRIVATE_MESSAGE", username=username, delay_ms=(time.perf_counter() - event_start) * 1000, note=f"to {target}")
+                        else:
+                            remove_client_socket(target_sock, reason="Private message delivery failed")
+                            send_line(client_socket, f"[ERROR] User '{target}' is currently unavailable.")
+                            log_performance("PRIVATE_MESSAGE_FAIL", username=username, delay_ms=(time.perf_counter() - event_start) * 1000, note=f"Delivery failed to {target}")
                     else:
                         send_line(client_socket, f"[ERROR] User '{target}' not online.")
+                        log_performance("PRIVATE_MESSAGE_FAIL", username=username, delay_ms=(time.perf_counter() - event_start) * 1000, note=f"{target} not online")
                     continue
 
                 if message.startswith("/"):
                     send_line(client_socket, "[ERROR] Unsupported command. Use /msg, /list, or /logout.")
+                    log_performance("INVALID_COMMAND", username=username, delay_ms=(time.perf_counter() - event_start) * 1000, note=message[:50])
                     continue
 
                 valid_msg, msg_error = validate_message(message)
                 if not valid_msg:
                     send_line(client_socket, f"[ERROR] {msg_error}")
+                    log_performance("INVALID_MESSAGE", username=username, delay_ms=(time.perf_counter() - event_start) * 1000, note=msg_error)
                     continue
 
                 formatted = f"{username}: {message}"
@@ -443,16 +607,23 @@ def handle_client(client_socket: socket.socket, address: tuple[str, int], users:
                 send_line(client_socket, formatted)
                 log_chat(username, "ALL", "BROADCAST", message)
                 update_stats("BROADCAST")
+                log_performance("BROADCAST", username=username, delay_ms=(time.perf_counter() - event_start) * 1000, note="Broadcast sent")
 
             except socket.timeout:
                 with clients_lock:
                     last_activity = clients.get(client_socket, {}).get("last_activity", time.time())
 
-                if time.time() - last_activity > SESSION_TIMEOUT:
+                if time.time() - last_activity > config["session_timeout"]:
                     send_line(client_socket, "SERVER|Session timed out due to inactivity.")
                     log_security("SESSION_TIMEOUT", username=username, ip=ip, detail="Inactivity timeout")
+                    log_performance("TIMEOUT", username=username, delay_ms=0.0, note="Inactivity timeout")
                     break
                 continue
+
+            except ConnectionResetError:
+                log_security("CONNECTION_RESET", username=username or "-", ip=ip, detail="Peer reset connection")
+                log_performance("CONNECTION_RESET", username=username or "-", delay_ms=0.0, note="Peer reset connection")
+                break
 
     except Exception as e:
         if username:
@@ -461,58 +632,97 @@ def handle_client(client_socket: socket.socket, address: tuple[str, int], users:
             log_security("SERVER_ERROR", username="-", ip=ip, detail=str(e))
 
     finally:
+        remove_client_socket(client_socket, reason="Client handler stopped")
+
+
+def cleanup_loop() -> None:
+    while not shutdown_event.is_set():
+        time.sleep(config["cleanup_interval"])
+        stale = []
+        now = time.time()
+
         with clients_lock:
-            info = clients.pop(client_socket, None)
+            for sock, info in list(clients.items()):
+                if now - info.get("last_activity", now) > config["session_timeout"]:
+                    stale.append((sock, info.get("username", "-")))
 
-        if info:
-            with active_users_lock:
-                active_users.discard(info["username"])
-            broadcast(f"[SERVER] {info['username']} left the chat.", exclude_sock=client_socket)
-            send_user_list()
-
-        try:
-            client_socket.close()
-        except Exception:
-            pass
+        for sock, username in stale:
+            log_security("SESSION_TIMEOUT", username=username, ip=clients.get(sock, {}).get("ip", "-"), detail="Cleanup loop timeout")
+            log_performance("TIMEOUT", username=username, delay_ms=0.0, note="Cleanup loop timeout")
+            try:
+                send_line(sock, "SERVER|Session timed out due to inactivity.")
+            except Exception:
+                pass
+            remove_client_socket(sock, reason="Cleanup loop timeout")
 
 
 def start_server() -> None:
+    global config
+    config = load_config()
     ensure_files()
     users = load_users()
 
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.bind((HOST, PORT))
-    server.listen(20)
+    server.bind((config["bind_host"], int(config["server_port"])))
+    server.listen(int(config["max_clients"]))
+    server.settimeout(float(config["accept_timeout"]))
 
-    print("=" * 60)
-    print(" Secure TCP Multi-Client Chat Server (Assignment 7)")
-    print("=" * 60)
-    print(f"Listening on {HOST}:{PORT}")
-    print(f"Users file: {USERS_FILE}")
-    print(f"Security log: {SECURITY_LOG}")
-    print(f"Chat history: {CHAT_HISTORY}")
-    print("=" * 60)
+    print("=" * 68)
+    print(" Secure TCP Multi-Client Chat Server (Assignment 8)")
+    print("=" * 68)
+    print(f"Listening on {config['bind_host']}:{config['server_port']}")
+    print(f"Users file: {config['users_file']}")
+    print(f"Security log: {config['security_log_file']}")
+    print(f"Chat history: {config['chat_history_file']}")
+    print(f"Performance results: {config['performance_results_file']}")
+    print("=" * 68)
+
+    log_performance("STARTUP", username="-", delay_ms=0.0, note="Server initialized")
+
+    cleaner = threading.Thread(target=cleanup_loop, daemon=True)
+    cleaner.start()
 
     try:
-        while True:
-            client_socket, address = server.accept()
+        while not shutdown_event.is_set():
+            try:
+                client_socket, address = server.accept()
+            except socket.timeout:
+                continue
+
+            with clients_lock:
+                current_clients = len(clients)
+
+            if current_clients >= int(config["max_clients"]):
+                try:
+                    send_line(client_socket, "AUTH_FAIL|Server is busy. Please try again later.")
+                except Exception:
+                    pass
+                try:
+                    client_socket.close()
+                except Exception:
+                    pass
+                log_security("REJECTED", username="-", ip=address[0], detail="Maximum client limit reached")
+                continue
+
             thread = threading.Thread(
                 target=handle_client,
                 args=(client_socket, address, users),
                 daemon=True,
             )
             thread.start()
+
     except KeyboardInterrupt:
         print("\nServer shutting down...")
     finally:
+        shutdown_event.set()
+
         with clients_lock:
             sockets = list(clients.keys())
+
         for sock in sockets:
-            try:
-                sock.close()
-            except Exception:
-                pass
+            remove_client_socket(sock, reason="Server shutdown")
+
         try:
             server.close()
         except Exception:

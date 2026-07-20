@@ -1,66 +1,170 @@
-2026-07-15 19:14:15 | AUTH_SUCCESS | user=admin | ip=10.0.0.2 | detail=Login successful
-2026-07-15 19:14:15 | SESSION_START | user=admin | ip=10.0.0.2 | detail=Session opened
-2026-07-15 19:37:25 | AUTH_SUCCESS | user=admin | ip=10.0.0.2 | detail=Login successful
-2026-07-15 19:37:25 | SESSION_START | user=admin | ip=10.0.0.2 | detail=Session opened
-2026-07-15 19:37:52 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
-2026-07-15 19:37:52 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
-2026-07-15 19:38:12 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
-2026-07-15 19:38:12 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
-2026-07-15 19:48:41 | AUTH_SUCCESS | user=admin | ip=10.0.0.2 | detail=Login successful
-2026-07-15 19:48:41 | SESSION_START | user=admin | ip=10.0.0.2 | detail=Session opened
-2026-07-15 19:49:01 | AUTH_SUCCESS | user=alice | ip=10.0.0.4 | detail=Login successful
-2026-07-15 19:49:01 | SESSION_START | user=alice | ip=10.0.0.4 | detail=Session opened
-2026-07-15 19:51:22 | AUTH_SUCCESS | user=admin | ip=10.0.0.4 | detail=Login successful
-2026-07-15 19:51:22 | SESSION_START | user=admin | ip=10.0.0.4 | detail=Session opened
-2026-07-15 19:51:40 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
-2026-07-15 19:51:40 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
-2026-07-15 20:16:14 | AUTH_SUCCESS | user=admin | ip=10.0.0.2 | detail=Login successful
-2026-07-15 20:16:14 | SESSION_START | user=admin | ip=10.0.0.2 | detail=Session opened
-2026-07-15 20:16:44 | AUTH_SUCCESS | user=alice | ip=10.0.0.4 | detail=Login successful
-2026-07-15 20:16:44 | SESSION_START | user=alice | ip=10.0.0.4 | detail=Session opened
-2026-07-15 20:18:20 | LOGOUT | user=alice | ip=10.0.0.4 | detail=User logged out
-2026-07-15 20:18:22 | LOGOUT | user=admin | ip=10.0.0.2 | detail=User logged out
-2026-07-15 20:23:14 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
-2026-07-15 20:23:14 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
-2026-07-15 20:24:28 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password
-2026-07-15 20:24:35 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password
-2026-07-15 20:24:48 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password
-2026-07-15 20:24:50 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password
-2026-07-15 20:24:52 | AUTH_FAIL | user=alice | ip=10.0.0.3 | detail=Incorrect password; account locked for 60 seconds
-2026-07-15 20:26:07 | AUTH_FAIL | user=bob | ip=10.0.0.4 | detail=Incorrect password
-2026-07-15 20:26:14 | SESSION_TIMEOUT | user=sara | ip=10.0.0.2 | detail=Inactivity timeout
-2026-07-15 20:26:20 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
-2026-07-15 20:26:20 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
-2026-07-15 20:28:20 | DUPLICATE_LOGIN | user=bob | ip=10.0.0.2 | detail=User already logged in
-2026-07-15 20:28:57 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
-2026-07-15 20:28:57 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
-2026-07-15 20:29:21 | SESSION_TIMEOUT | user=bob | ip=10.0.0.4 | detail=Inactivity timeout
-2026-07-15 20:29:57 | AUTH_SUCCESS | user=bob | ip=10.0.0.3 | detail=Login successful
-2026-07-15 20:29:57 | SESSION_START | user=bob | ip=10.0.0.3 | detail=Session opened
-2026-07-15 20:30:52 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
-2026-07-15 20:30:55 | LOGOUT | user=bob | ip=10.0.0.3 | detail=User logged out
-2026-07-15 20:31:43 | AUTH_SUCCESS | user=alice | ip=10.0.0.2 | detail=Login successful
-2026-07-15 20:31:43 | SESSION_START | user=alice | ip=10.0.0.2 | detail=Session opened
-2026-07-15 20:32:01 | AUTH_SUCCESS | user=bob | ip=10.0.0.3 | detail=Login successful
-2026-07-15 20:32:01 | SESSION_START | user=bob | ip=10.0.0.3 | detail=Session opened
-2026-07-15 20:32:22 | AUTH_SUCCESS | user=sara | ip=10.0.0.4 | detail=Login successful
-2026-07-15 20:32:22 | SESSION_START | user=sara | ip=10.0.0.4 | detail=Session opened
-2026-07-15 20:34:09 | LOGOUT | user=sara | ip=10.0.0.4 | detail=User logged out
-2026-07-15 20:34:50 | AUTH_FAIL | user=mohit | ip=10.0.0.2 | detail=Unknown username
-2026-07-15 20:36:11 | SESSION_TIMEOUT | user=bob | ip=10.0.0.3 | detail=Inactivity timeout
-2026-07-15 20:38:08 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
-2026-07-15 20:38:08 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
-2026-07-15 20:39:23 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
-2026-07-15 20:44:15 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
-2026-07-15 20:44:15 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
-2026-07-15 20:45:00 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
-2026-07-15 20:45:39 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
-2026-07-15 20:45:39 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
-2026-07-15 20:46:27 | AUTH_FAIL | user=bob | ip=10.0.0.3 | detail=Incorrect password
-2026-07-15 20:47:39 | AUTH_SUCCESS | user=bob | ip=10.0.0.3 | detail=Login successful
-2026-07-15 20:47:39 | SESSION_START | user=bob | ip=10.0.0.3 | detail=Session opened
-2026-07-15 20:47:59 | AUTH_SUCCESS | user=alice | ip=10.0.0.4 | detail=Login successful
-2026-07-15 20:47:59 | SESSION_START | user=alice | ip=10.0.0.4 | detail=Session opened
-2026-07-15 20:48:39 | SESSION_TIMEOUT | user=sara | ip=10.0.0.2 | detail=Inactivity timeout
-2026-07-15 20:51:11 | SESSION_TIMEOUT | user=alice | ip=10.0.0.4 | detail=Inactivity timeout
-2026-07-15 20:51:31 | SESSION_TIMEOUT | user=bob | ip=10.0.0.3 | detail=Inactivity timeout
+2026-07-20 22:24:08 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-20 22:24:08 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-20 22:24:36 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
+2026-07-20 22:24:36 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
+2026-07-20 22:25:11 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
+2026-07-20 22:25:11 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
+2026-07-20 22:25:37 | AUTH_SUCCESS | user=charlie | ip=10.0.0.5 | detail=Login successful
+2026-07-20 22:25:37 | SESSION_START | user=charlie | ip=10.0.0.5 | detail=Session opened
+2026-07-20 22:26:52 | AUTH_FAIL | user=david | ip=10.0.0.6 | detail=Incorrect password
+2026-07-20 22:26:59 | AUTH_FAIL | user=david | ip=10.0.0.6 | detail=Incorrect password
+2026-07-20 22:27:08 | SESSION_TIMEOUT | user=sara | ip=10.0.0.2 | detail=Cleanup loop timeout
+2026-07-20 22:27:08 | DISCONNECT | user=sara | ip=10.0.0.2 | detail=Cleanup loop timeout
+2026-07-20 22:27:08 | SERVER_ERROR | user=sara | ip=10.0.0.2 | detail=[Errno 9] Bad file descriptor
+2026-07-20 22:27:36 | SESSION_TIMEOUT | user=alice | ip=10.0.0.3 | detail=Inactivity timeout
+2026-07-20 22:27:36 | DISCONNECT | user=alice | ip=10.0.0.3 | detail=Client handler stopped
+2026-07-20 22:28:12 | SESSION_TIMEOUT | user=bob | ip=10.0.0.4 | detail=Inactivity timeout
+2026-07-20 22:28:12 | DISCONNECT | user=bob | ip=10.0.0.4 | detail=Client handler stopped
+2026-07-20 22:28:37 | SESSION_TIMEOUT | user=charlie | ip=10.0.0.5 | detail=Inactivity timeout
+2026-07-20 22:28:37 | DISCONNECT | user=charlie | ip=10.0.0.5 | detail=Client handler stopped
+2026-07-20 22:30:54 | AUTH_SUCCESS | user=charlie | ip=10.0.0.5 | detail=Login successful
+2026-07-20 22:30:54 | SESSION_START | user=charlie | ip=10.0.0.5 | detail=Session opened
+2026-07-20 22:31:06 | AUTH_SUCCESS | user=david | ip=10.0.0.6 | detail=Login successful
+2026-07-20 22:31:06 | SESSION_START | user=david | ip=10.0.0.6 | detail=Session opened
+2026-07-20 22:32:44 | LOGOUT | user=david | ip=10.0.0.6 | detail=User logged out
+2026-07-20 22:32:44 | DISCONNECT | user=david | ip=10.0.0.6 | detail=Client handler stopped
+2026-07-20 22:32:51 | LOGOUT | user=charlie | ip=10.0.0.5 | detail=User logged out
+2026-07-20 22:32:51 | DISCONNECT | user=charlie | ip=10.0.0.5 | detail=Client handler stopped
+2026-07-20 22:42:13 | AUTH_SUCCESS | user=david | ip=10.0.0.6 | detail=Login successful
+2026-07-20 22:42:13 | SESSION_START | user=david | ip=10.0.0.6 | detail=Session opened
+2026-07-20 22:42:23 | AUTH_SUCCESS | user=charlie | ip=10.0.0.5 | detail=Login successful
+2026-07-20 22:42:23 | SESSION_START | user=charlie | ip=10.0.0.5 | detail=Session opened
+2026-07-20 22:42:28 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-20 22:42:28 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-20 22:42:31 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
+2026-07-20 22:42:31 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
+2026-07-20 22:42:34 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
+2026-07-20 22:42:34 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
+2026-07-20 22:45:28 | SESSION_TIMEOUT | user=sara | ip=10.0.0.2 | detail=Inactivity timeout
+2026-07-20 22:45:28 | DISCONNECT | user=sara | ip=10.0.0.2 | detail=Client handler stopped
+2026-07-20 22:45:31 | SESSION_TIMEOUT | user=alice | ip=10.0.0.3 | detail=Inactivity timeout
+2026-07-20 22:45:31 | DISCONNECT | user=alice | ip=10.0.0.3 | detail=Client handler stopped
+2026-07-20 22:45:45 | SESSION_TIMEOUT | user=bob | ip=10.0.0.4 | detail=Inactivity timeout
+2026-07-20 22:45:45 | DISCONNECT | user=bob | ip=10.0.0.4 | detail=Client handler stopped
+2026-07-20 22:45:56 | SESSION_TIMEOUT | user=david | ip=10.0.0.6 | detail=Inactivity timeout
+2026-07-20 22:45:56 | DISCONNECT | user=david | ip=10.0.0.6 | detail=Client handler stopped
+2026-07-20 22:46:16 | SESSION_TIMEOUT | user=charlie | ip=10.0.0.5 | detail=Inactivity timeout
+2026-07-20 22:46:16 | DISCONNECT | user=charlie | ip=10.0.0.5 | detail=Client handler stopped
+2026-07-20 23:03:19 | AUTH_FAIL | user=sara | ip=10.0.0.2 | detail=Incorrect password
+2026-07-20 23:03:36 | AUTH_FAIL | user=sara | ip=10.0.0.2 | detail=Incorrect password
+2026-07-20 23:03:38 | AUTH_FAIL | user=sara | ip=10.0.0.2 | detail=Incorrect password
+2026-07-20 23:03:40 | AUTH_FAIL | user=sara | ip=10.0.0.2 | detail=Incorrect password
+2026-07-20 23:03:41 | AUTH_FAIL | user=sara | ip=10.0.0.2 | detail=Incorrect password; account locked for 60 seconds
+2026-07-20 23:04:03 | AUTH_SUCCESS | user=alice | ip=10.0.0.2 | detail=Login successful
+2026-07-20 23:04:03 | SESSION_START | user=alice | ip=10.0.0.2 | detail=Session opened
+2026-07-20 23:04:57 | DUPLICATE_LOGIN | user=alice | ip=10.0.0.3 | detail=User already logged in
+2026-07-20 23:05:19 | AUTH_SUCCESS | user=sara | ip=10.0.0.3 | detail=Login successful
+2026-07-20 23:05:19 | SESSION_START | user=sara | ip=10.0.0.3 | detail=Session opened
+2026-07-20 23:05:51 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
+2026-07-20 23:05:51 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
+2026-07-20 23:06:56 | AUTH_SUCCESS | user=charlie | ip=10.0.0.5 | detail=Login successful
+2026-07-20 23:06:56 | SESSION_START | user=charlie | ip=10.0.0.5 | detail=Session opened
+2026-07-20 23:07:17 | AUTH_SUCCESS | user=david | ip=10.0.0.6 | detail=Login successful
+2026-07-20 23:07:17 | SESSION_START | user=david | ip=10.0.0.6 | detail=Session opened
+2026-07-20 23:09:10 | SESSION_TIMEOUT | user=alice | ip=10.0.0.2 | detail=Inactivity timeout
+2026-07-20 23:09:10 | DISCONNECT | user=alice | ip=10.0.0.2 | detail=Client handler stopped
+2026-07-20 23:09:18 | SESSION_TIMEOUT | user=sara | ip=10.0.0.3 | detail=Inactivity timeout
+2026-07-20 23:09:18 | DISCONNECT | user=sara | ip=10.0.0.3 | detail=Client handler stopped
+2026-07-20 23:09:28 | SESSION_TIMEOUT | user=bob | ip=10.0.0.4 | detail=Inactivity timeout
+2026-07-20 23:09:28 | DISCONNECT | user=bob | ip=10.0.0.4 | detail=Client handler stopped
+2026-07-20 23:09:57 | SESSION_TIMEOUT | user=charlie | ip=10.0.0.5 | detail=Inactivity timeout
+2026-07-20 23:09:57 | DISCONNECT | user=charlie | ip=10.0.0.5 | detail=Client handler stopped
+2026-07-20 23:10:11 | LOGOUT | user=david | ip=10.0.0.6 | detail=User logged out
+2026-07-20 23:10:11 | DISCONNECT | user=david | ip=10.0.0.6 | detail=Client handler stopped
+2026-07-20 23:33:09 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-20 23:33:09 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-20 23:33:14 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
+2026-07-20 23:33:14 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
+2026-07-20 23:33:19 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
+2026-07-20 23:33:19 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
+2026-07-20 23:33:25 | AUTH_FAIL | user=charlie | ip=10.0.0.5 | detail=Incorrect password
+2026-07-20 23:33:38 | AUTH_SUCCESS | user=charlie | ip=10.0.0.5 | detail=Login successful
+2026-07-20 23:33:38 | SESSION_START | user=charlie | ip=10.0.0.5 | detail=Session opened
+2026-07-20 23:33:42 | AUTH_SUCCESS | user=david | ip=10.0.0.6 | detail=Login successful
+2026-07-20 23:33:42 | SESSION_START | user=david | ip=10.0.0.6 | detail=Session opened
+2026-07-20 23:35:39 | LOGOUT | user=alice | ip=10.0.0.3 | detail=User logged out
+2026-07-20 23:35:39 | DISCONNECT | user=alice | ip=10.0.0.3 | detail=Client handler stopped
+2026-07-20 23:35:44 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
+2026-07-20 23:35:44 | DISCONNECT | user=sara | ip=10.0.0.2 | detail=Client handler stopped
+2026-07-20 23:35:52 | LOGOUT | user=bob | ip=10.0.0.4 | detail=User logged out
+2026-07-20 23:35:52 | DISCONNECT | user=bob | ip=10.0.0.4 | detail=Client handler stopped
+2026-07-20 23:35:57 | LOGOUT | user=charlie | ip=10.0.0.5 | detail=User logged out
+2026-07-20 23:35:57 | DISCONNECT | user=charlie | ip=10.0.0.5 | detail=Client handler stopped
+2026-07-20 23:36:08 | LOGOUT | user=david | ip=10.0.0.6 | detail=User logged out
+2026-07-20 23:36:08 | DISCONNECT | user=david | ip=10.0.0.6 | detail=Client handler stopped
+2026-07-20 23:43:40 | AUTH_SUCCESS | user=bob | ip=10.0.0.9 | detail=Login successful
+2026-07-20 23:43:40 | SESSION_START | user=bob | ip=10.0.0.9 | detail=Session opened
+2026-07-20 23:43:45 | AUTH_SUCCESS | user=grace | ip=10.0.0.8 | detail=Login successful
+2026-07-20 23:43:45 | SESSION_START | user=grace | ip=10.0.0.8 | detail=Session opened
+2026-07-20 23:43:49 | AUTH_SUCCESS | user=frank | ip=10.0.0.7 | detail=Login successful
+2026-07-20 23:43:49 | SESSION_START | user=frank | ip=10.0.0.7 | detail=Session opened
+2026-07-20 23:43:53 | AUTH_FAIL | user=eva | ip=10.0.0.6 | detail=Incorrect password
+2026-07-20 23:44:04 | AUTH_FAIL | user=eva | ip=10.0.0.6 | detail=Incorrect password
+2026-07-20 23:44:18 | AUTH_FAIL | user=eva | ip=10.0.0.6 | detail=Incorrect password
+2026-07-20 23:44:42 | AUTH_SUCCESS | user=eva | ip=10.0.0.6 | detail=Login successful
+2026-07-20 23:44:42 | SESSION_START | user=eva | ip=10.0.0.6 | detail=Session opened
+2026-07-20 23:44:46 | AUTH_SUCCESS | user=david | ip=10.0.0.5 | detail=Login successful
+2026-07-20 23:44:46 | SESSION_START | user=david | ip=10.0.0.5 | detail=Session opened
+2026-07-20 23:44:50 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
+2026-07-20 23:44:50 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
+2026-07-20 23:44:56 | AUTH_FAIL | user=sara | ip=10.0.0.2 | detail=Incorrect password
+2026-07-20 23:45:15 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-20 23:45:15 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-20 23:45:18 | AUTH_SUCCESS | user=charlie | ip=10.0.0.4 | detail=Login successful
+2026-07-20 23:45:18 | SESSION_START | user=charlie | ip=10.0.0.4 | detail=Session opened
+2026-07-20 23:47:34 | LOGOUT | user=charlie | ip=10.0.0.4 | detail=User logged out
+2026-07-20 23:47:34 | DISCONNECT | user=charlie | ip=10.0.0.4 | detail=Client handler stopped
+2026-07-20 23:47:46 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
+2026-07-20 23:47:46 | DISCONNECT | user=sara | ip=10.0.0.2 | detail=Client handler stopped
+2026-07-20 23:47:46 | LOGOUT | user=alice | ip=10.0.0.3 | detail=User logged out
+2026-07-20 23:47:46 | DISCONNECT | user=alice | ip=10.0.0.3 | detail=Client handler stopped
+2026-07-20 23:47:47 | LOGOUT | user=eva | ip=10.0.0.6 | detail=User logged out
+2026-07-20 23:47:47 | DISCONNECT | user=eva | ip=10.0.0.6 | detail=Client handler stopped
+2026-07-20 23:47:47 | LOGOUT | user=david | ip=10.0.0.5 | detail=User logged out
+2026-07-20 23:47:47 | DISCONNECT | user=david | ip=10.0.0.5 | detail=Client handler stopped
+2026-07-20 23:47:47 | LOGOUT | user=grace | ip=10.0.0.8 | detail=User logged out
+2026-07-20 23:47:47 | DISCONNECT | user=grace | ip=10.0.0.8 | detail=Client handler stopped
+2026-07-20 23:47:47 | LOGOUT | user=frank | ip=10.0.0.7 | detail=User logged out
+2026-07-20 23:47:47 | DISCONNECT | user=frank | ip=10.0.0.7 | detail=Client handler stopped
+2026-07-20 23:47:48 | LOGOUT | user=bob | ip=10.0.0.9 | detail=User logged out
+2026-07-20 23:47:48 | DISCONNECT | user=bob | ip=10.0.0.9 | detail=Client handler stopped
+2026-07-20 23:52:17 | AUTH_SUCCESS | user=irene | ip=10.0.0.11 | detail=Login successful
+2026-07-20 23:52:17 | SESSION_START | user=irene | ip=10.0.0.11 | detail=Session opened
+2026-07-20 23:52:22 | AUTH_SUCCESS | user=henry | ip=10.0.0.10 | detail=Login successful
+2026-07-20 23:52:22 | SESSION_START | user=henry | ip=10.0.0.10 | detail=Session opened
+2026-07-20 23:52:26 | AUTH_SUCCESS | user=grace | ip=10.0.0.9 | detail=Login successful
+2026-07-20 23:52:26 | SESSION_START | user=grace | ip=10.0.0.9 | detail=Session opened
+2026-07-20 23:52:29 | AUTH_SUCCESS | user=frank | ip=10.0.0.8 | detail=Login successful
+2026-07-20 23:52:29 | SESSION_START | user=frank | ip=10.0.0.8 | detail=Session opened
+2026-07-20 23:52:33 | AUTH_SUCCESS | user=eva | ip=10.0.0.7 | detail=Login successful
+2026-07-20 23:52:33 | SESSION_START | user=eva | ip=10.0.0.7 | detail=Session opened
+2026-07-20 23:52:37 | AUTH_SUCCESS | user=david | ip=10.0.0.6 | detail=Login successful
+2026-07-20 23:52:37 | SESSION_START | user=david | ip=10.0.0.6 | detail=Session opened
+2026-07-20 23:52:40 | AUTH_SUCCESS | user=charlie | ip=10.0.0.5 | detail=Login successful
+2026-07-20 23:52:40 | SESSION_START | user=charlie | ip=10.0.0.5 | detail=Session opened
+2026-07-20 23:52:43 | AUTH_SUCCESS | user=bob | ip=10.0.0.4 | detail=Login successful
+2026-07-20 23:52:43 | SESSION_START | user=bob | ip=10.0.0.4 | detail=Session opened
+2026-07-20 23:52:46 | AUTH_SUCCESS | user=alice | ip=10.0.0.3 | detail=Login successful
+2026-07-20 23:52:46 | SESSION_START | user=alice | ip=10.0.0.3 | detail=Session opened
+2026-07-20 23:52:49 | AUTH_SUCCESS | user=sara | ip=10.0.0.2 | detail=Login successful
+2026-07-20 23:52:49 | SESSION_START | user=sara | ip=10.0.0.2 | detail=Session opened
+2026-07-20 23:55:37 | LOGOUT | user=david | ip=10.0.0.6 | detail=User logged out
+2026-07-20 23:55:37 | DISCONNECT | user=david | ip=10.0.0.6 | detail=Client handler stopped
+2026-07-20 23:55:49 | LOGOUT | user=bob | ip=10.0.0.4 | detail=User logged out
+2026-07-20 23:55:49 | DISCONNECT | user=bob | ip=10.0.0.4 | detail=Client handler stopped
+2026-07-20 23:55:49 | LOGOUT | user=sara | ip=10.0.0.2 | detail=User logged out
+2026-07-20 23:55:49 | DISCONNECT | user=sara | ip=10.0.0.2 | detail=Client handler stopped
+2026-07-20 23:55:50 | LOGOUT | user=alice | ip=10.0.0.3 | detail=User logged out
+2026-07-20 23:55:50 | DISCONNECT | user=alice | ip=10.0.0.3 | detail=Client handler stopped
+2026-07-20 23:55:50 | LOGOUT | user=charlie | ip=10.0.0.5 | detail=User logged out
+2026-07-20 23:55:50 | DISCONNECT | user=charlie | ip=10.0.0.5 | detail=Client handler stopped
+2026-07-20 23:55:50 | LOGOUT | user=eva | ip=10.0.0.7 | detail=User logged out
+2026-07-20 23:55:50 | DISCONNECT | user=eva | ip=10.0.0.7 | detail=Client handler stopped
+2026-07-20 23:55:50 | LOGOUT | user=frank | ip=10.0.0.8 | detail=User logged out
+2026-07-20 23:55:50 | DISCONNECT | user=frank | ip=10.0.0.8 | detail=Client handler stopped
+2026-07-20 23:55:51 | LOGOUT | user=grace | ip=10.0.0.9 | detail=User logged out
+2026-07-20 23:55:51 | DISCONNECT | user=grace | ip=10.0.0.9 | detail=Client handler stopped
+2026-07-20 23:55:51 | LOGOUT | user=henry | ip=10.0.0.10 | detail=User logged out
+2026-07-20 23:55:51 | DISCONNECT | user=henry | ip=10.0.0.10 | detail=Client handler stopped
+2026-07-20 23:55:51 | LOGOUT | user=irene | ip=10.0.0.11 | detail=User logged out
+2026-07-20 23:55:51 | DISCONNECT | user=irene | ip=10.0.0.11 | detail=Client handler stopped

@@ -1,152 +1,227 @@
-# 🔒 Secure TCP Chat Application
-### Assignment 7 – Secure Network Application Development Using TCP
+# 🚀 TCP Chat Application -- Assignment 8
+
+### Application Optimization, Scalability and Reliability
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
-![TCP](https://img.shields.io/badge/Protocol-TCP-green.svg)
+![Protocol](https://img.shields.io/badge/Protocol-TCP-green.svg)
 ![GUI](https://img.shields.io/badge/GUI-Tkinter-orange.svg)
-![Security](https://img.shields.io/badge/Security-SHA--256-red.svg)
+![Scalability](https://img.shields.io/badge/Concurrent%20Clients-10-success.svg)
+![Performance](https://img.shields.io/badge/Performance-Auto%20Logging-red.svg)
+
+------------------------------------------------------------------------
 
 ## 👨‍💻 Student Information
 
-**Name:** Parth Rawat  
-**Roll Number:** 0126CY231042
+  ---------------- -------------------
+  **Name**         Parth Rawat
+  **Roll No.**     0126CY231042
+  ---------------- -------------------
 
----
+------------------------------------------------------------------------
 
-# 📖 Project Overview
+## 📖 Project Overview
 
-This project is an enhanced version of the multi-client TCP Chat Application developed in Assignment 6. The application has been upgraded by implementing practical security mechanisms such as user authentication, secure password storage, duplicate login prevention, input validation, failed login protection, session timeout, secure logging, and Wireshark verification.
+This project is the enhanced version of the Secure TCP Chat Application
+developed in Assignment 7. The focus of Assignment 8 is to improve
+**connection management, reliability, scalability, configuration
+management, and performance evaluation** while preserving the existing
+TCP communication protocol.
 
----
+------------------------------------------------------------------------
 
-# 🎯 Objectives
+## 🎯 Assignment Objectives
 
-- Develop a secure multi-client TCP chat application.
-- Implement authentication using username and password.
-- Store passwords securely using SHA-256 hashing.
-- Prevent duplicate logins.
-- Validate user input.
-- Protect against brute-force login attempts.
-- Implement session timeout and secure logging.
-- Verify communication using Wireshark.
+-   Improve connection management
+-   Automatic inactive client cleanup
+-   Graceful shutdown
+-   Automatic reconnection support
+-   Support 10 concurrent clients
+-   Configuration management using `config.json`
+-   Automatic performance logging
+-   Wireshark verification
+-   Performance evaluation using graphs
 
----
+------------------------------------------------------------------------
 
-# 🛠 Technologies Used
+## ✨ Features
 
-- Python 3
-- Socket Programming
-- Tkinter GUI
-- Threading
-- SHA-256 (hashlib)
-- JSON / CSV
-- Mininet
-- Wireshark
-- Linux (Ubuntu)
+### 🔹 Connection Management
 
----
+-   Automatic client cleanup
+-   Duplicate login prevention
+-   Session timeout
+-   Online users management
 
-# ✨ Security Features
+### 🔹 Reliability
 
-- ✅ User Authentication
-- ✅ SHA-256 Password Hashing
-- ✅ Duplicate Login Prevention
-- ✅ Input Validation
-- ✅ Failed Login Protection
-- ✅ Session Timeout
-- ✅ Logout Support
-- ✅ Secure Logging
-- ✅ Wireshark Verification
+-   Graceful shutdown
+-   Exception handling
+-   Login validation
+-   Account lockout protection
 
----
+### 🔹 Scalability
 
-# 📂 Project Structure
+-   Supports **10 concurrent clients**
+-   Thread-safe client handling
+-   Optimized socket management
 
-```text
-Assignment-7/
+### 🔹 Performance
+
+-   Auto-generated `performance_results.csv`
+-   Delay measurement
+-   Throughput calculation
+-   CPU usage logging
+-   Memory usage logging
+-   Graph generation
+
+------------------------------------------------------------------------
+
+## 🛠 Technologies Used
+
+-   Python 3
+-   Socket Programming
+-   Tkinter
+-   Threading
+-   JSON
+-   CSV
+-   SHA-256
+-   psutil
+-   Wireshark
+-   Mininet
+
+------------------------------------------------------------------------
+
+## 📂 Project Structure
+
+``` text
+Assignment-8/
+│
 ├── server.py
 ├── client_gui.py
+├── config.json
 ├── users.json
+├── performance_results.csv
+├── chat_history.csv
 ├── security_log.txt
+├── graphs/
 ├── screenshots/
 ├── report.pdf
-├── README.md
-└── handwritten_reflection.pdf
+├── handwritten_reflection.pdf
+└── README.md
 ```
 
----
+------------------------------------------------------------------------
 
-# 🚀 How to Run
+## 🚀 Getting Started
 
-```bash
-sudo mn --topo single,5
+### Clone Repository
+
+``` bash
+git clone <repository-url>
+cd Assignment-8
+```
+
+### Run Server
+
+``` bash
 python3 server.py
+```
+
+### Run Client
+
+``` bash
 python3 client_gui.py
 ```
 
----
+------------------------------------------------------------------------
 
-# 📸 Screenshots
+## 📊 Performance Evaluation
 
-Place the following screenshots inside the `screenshots` folder:
+   Concurrent Clients   Status
+  -------------------- --------
+           5              ✅
+           8              ✅
+           10             ✅
 
-- Login_Window_Before_Connect.png
-- Successful_Login_Online_Users.png
-- Duplicate_Login_Prevention.png
-- Invalid_Username_Login.png
-- Invalid_Username_Password_Login.png
-- Login_Lockout_After_Failed_Attempts.png
-- Unsupported_Command_Error.png
-- Authenticated_Chat_History.png
-- Session_Timeout.png
-- Wireshark_login_capture.png
-- Wireshark_Failed_login.png
-- Wireshark_Broadcast_Message.png
-- Wireshark_Logout.png
+### Metrics Collected
 
----
+-   Average Delay
+-   Throughput
+-   CPU Usage
+-   Memory Usage
 
-# 📡 Wireshark Filter
+### Generated Graphs
 
-```text
+-   Average Delay vs Concurrent Clients
+-   Throughput vs Concurrent Clients
+-   CPU Usage vs Concurrent Clients
+-   Memory Usage vs Concurrent Clients
+
+------------------------------------------------------------------------
+
+## 📸 Screenshots
+
+-   Successful Login
+-   Authenticated Chat
+-   Duplicate Login Blocked
+-   Wrong Password
+-   Password Too Short
+-   Account Lockout
+-   Session Timeout
+-   Logout
+-   Wireshark Login
+-   Wireshark Chat
+-   Wireshark Failed Login
+-   Wireshark Logout
+
+------------------------------------------------------------------------
+
+## 📡 Wireshark Filter
+
+``` text
 tcp.port == 5000
 ```
 
----
+------------------------------------------------------------------------
 
-# 🧪 Testing Summary
+## ✅ Testing Summary
 
-| Test Case | Status |
-|-----------|--------|
-| Successful Login | ✅ |
-| Invalid Username | ✅ |
-| Wrong Password | ✅ |
-| Duplicate Login | ✅ |
-| Failed Login Lock | ✅ |
-| Public Chat | ✅ |
-| Private Chat | ✅ |
-| Session Timeout | ✅ |
-| Logout | ✅ |
-| Wireshark Verification | ✅ |
+  Test Case                   Status
+  -------------------------- --------
+  Login Authentication          ✅
+  Duplicate Login               ✅
+  Session Timeout               ✅
+  Private Chat                  ✅
+  Broadcast Chat                ✅
+  Auto Performance Logging      ✅
+  10 Concurrent Clients         ✅
+  Wireshark Verification        ✅
 
----
+------------------------------------------------------------------------
 
-# 📚 Learning Outcomes
+## 📚 Learning Outcomes
 
-- Authentication
-- Password Hashing
-- Secure TCP Communication
-- Input Validation
-- Session Management
-- Secure Logging
-- Wireshark Packet Analysis
+-   Connection Management
+-   Reliability Enhancement
+-   Scalability Improvement
+-   Configuration Management
+-   Performance Evaluation
+-   TCP Socket Programming
+-   Wireshark Packet Analysis
 
----
+------------------------------------------------------------------------
 
-# ✅ Conclusion
+## ✅ Conclusion
 
-The application successfully integrates authentication, SHA-256 password hashing, duplicate login prevention, session timeout, input validation, secure logging, and Wireshark verification to provide a secure TCP chat system.
+This project successfully enhances the previous TCP-based multi-client
+chat application by improving connection management, reliability,
+scalability, and performance monitoring. It supports up to 10 concurrent
+clients, uses configurable settings through `config.json`, automatically
+generates performance logs, and verifies TCP communication using
+Wireshark. The implementation demonstrates a stable, maintainable, and
+optimized client-server application suitable for the Assignment 8
+objectives.
 
----
+------------------------------------------------------------------------
 
-⭐ Developed for Assignment 7.
+⭐ **Developed by Parth Rawat**
